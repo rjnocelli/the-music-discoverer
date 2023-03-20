@@ -11,6 +11,11 @@ spotify_client = SpotifyClient()
 def read_root():
     return {"Hello": "World"}
 
-@app.get("/auth", response_class=RedirectResponse)
-def auth():
+@app.get("/authorize", response_class=RedirectResponse)
+async def auth():
     return spotify_client.make_authorize_url()
+
+@app.get("/callback")
+async def get_token(code: str, state: str):
+    payload = spotify_client.get_token(code, state)
+    return payload   
